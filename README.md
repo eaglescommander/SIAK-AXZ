@@ -2,12 +2,12 @@
 Win war fast, win war smart
 
 ## What you need
-- Selenium and Python
-- Chromedriver according to your browser's version
-- Put your username and password on the appropriate txt
-- Put the classes you want on the appropriate txt, check name on the website
+- Selenium and Python, this should be fairly obvious if you know basic programming
+- Chromedriver according to your browser's version, place it on the same folder as this
+- Put your username and password on user_pass.txt
+- Put the classes you want on matkul.txt, put each class on separate line, check the name of each on the "schedule" section of the website (E.g. MatDis 1-A)
 
-Just run it after that
+Just run it after that, run multiple instance if you want but make sure to monitor each so they don't get stuck
 
 If you don't know how to use this, that means you probably shouldn't
 
