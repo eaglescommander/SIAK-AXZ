@@ -1,4 +1,7 @@
 # Blitzkrieg
+
+![My Third Reich Can't Be This Cute](https://user-images.githubusercontent.com/39584172/149769408-94ac3f40-bfe8-4f37-89bb-17bfd9ce2a0f.png)
+
 Win war fast, win war smart
 
 ## What you need
