@@ -1,10 +1,12 @@
 # Blitzkrieg
+Win war fast, win war smart
 
 ![My Third Reich Can't Be This Cute](https://user-images.githubusercontent.com/39584172/149769408-94ac3f40-bfe8-4f37-89bb-17bfd9ce2a0f.png)
 
-Win war fast, win war smart
+Auf der Heide blüht ein kleines Blümelein<br />
+und das heißt: Erika.
 
-## What you need
+## What You Need
 - Selenium and Python, this should be fairly obvious if you know basic programming
 - Chromedriver according to your browser's version, place it on the same folder as this
 - Put your username and password in user_pass.txt
@@ -22,7 +24,7 @@ blitzkrieg.py - a faster but more volatile version
 
 blitzkrieg++.py - slower but foolproof even if you fall asleep on it
 
-## Good to know stuff
+## Good To Know Stuff
 Warning: It can get stuck somewhat due to siak's new system. It is advisable to open multiple instances
 
 Tips:
@@ -32,3 +34,6 @@ Tips:
 - Monitor it until it can login at least once. Continuous login thereafter should pose no trouble until a certain amount of time elapses
 - Run multiple of the same and/or different ver. at the same time so at least one can succeed
 - Only us this as an insurance, manual participation and monitoring is advised
+
+## Credits
+Not Safe For Plebs
