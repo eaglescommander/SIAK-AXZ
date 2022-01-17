@@ -4,8 +4,8 @@ Win war fast, win war smart
 ## What you need
 - Selenium and Python, this should be fairly obvious if you know basic programming
 - Chromedriver according to your browser's version, place it on the same folder as this
-- Put your username and password on user_pass.txt
-- Put the classes you want on matkul.txt, put each class on separate line, check the name of each on the "schedule" section of the website (E.g. MatDis 1-A)
+- Put your username and password in user_pass.txt
+- Put the classes you want in matkul.txt, put each class on a separate line, check the name of each on the "schedule" section of the website (E.g. MatDis 1-A)
 
 Just run it after that, run multiple instance if you want but make sure to monitor each so they don't get stuck
 
@@ -20,7 +20,7 @@ blitzkrieg.py - a faster but more volatile version
 blitzkrieg++.py - slower but foolproof even if you fall asleep on it
 
 ## Good to know stuff
-Warning: It can be stuck somewhat due to siak's new system. It is advisable to open multiple instances
+Warning: It can get stuck somewhat due to siak's new system. It is advisable to open multiple instances
 
 Tips:
 - Read the code first so you know what it does. You're a programmer, right?
