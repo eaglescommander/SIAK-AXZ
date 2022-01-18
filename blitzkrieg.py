@@ -5,7 +5,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common.exceptions import NoSuchElementException
 import time
 
-def isi_siak(username, password):
+def war(username, password):
     options = webdriver.ChromeOptions()
     options.add_argument('--ignore-certificate-errors')
     options.add_argument('--ignore-ssl-errors')
@@ -16,7 +16,6 @@ def isi_siak(username, password):
     # driver.set_page_load_timeout(5)
 
     login(driver, username, password)
-
 
     matkul=[]
     with open('matkul.txt') as file_inp:
@@ -41,10 +40,7 @@ def isi_siak(username, password):
         try:
             for kelas in matkul:
                 try:
-                    element=driver.find_element_by_xpath("//a[text()='{}']".format(kelas))
-                    label=element.find_element_by_xpath('..')
-                    ans=label.get_attribute('for')
-                    clicked=driver.find_element_by_xpath('//input[@id="{}"]'.format(ans))
+                    clicked=driver.find_element_by_xpath('//input[@value="{}"]'.format(kelas))
                     clicked.click()
 
                 except NoSuchElementException:
@@ -52,7 +48,7 @@ def isi_siak(username, password):
 
             driver.find_element_by_name('submit').click()
 
-            if ("IRS berhasil tersimpan!" in driver.page_source):
+            if ("IRS berhasil tersimpan!" in driver.page_source and "Daftar IRS" in driver.page_source):
                 break
 
             raise NoSuchElementException
@@ -60,7 +56,7 @@ def isi_siak(username, password):
         except NoSuchElementException:
             driver.get("https://academic.ui.ac.id/main/CoursePlan/CoursePlanEdit")
 
-    print("Otsu")
+    print("Heil")
     input()
     driver.close()
 
@@ -114,8 +110,8 @@ def logout(driver):
 
 if __name__ == "__main__":
     uspass=[]
-    with open('user_pass.txt') as file_inp:
+    with open('credentials.txt') as file_inp:
         for line in file_inp:
             uspass.append(line.strip())
 
-    isi_siak(uspass[0],uspass[1])
+    war(uspass[0],uspass[1])
