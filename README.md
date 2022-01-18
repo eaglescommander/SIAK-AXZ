@@ -17,12 +17,7 @@ Just run it after that, run multiple instance if you want but make sure to monit
 If you don't know how to use this, that means you probably shouldn't
 
 ## Last Tested
-Semester Ganjil 2021/2022 (real war)
-
-## File Information
-blitzkrieg.py - a faster but more volatile version
-
-blitzkrieg++.py - slower but foolproof even if you fall asleep on it
+Semester Genap 2021/2022 (real war)
 
 ## Good To Know Stuff
 Warning: It can get stuck somewhat due to siak's new system. It is advisable to open multiple instances

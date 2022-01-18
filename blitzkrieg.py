@@ -2,7 +2,8 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.action_chains import ActionChains
-from selenium.common.exceptions import NoSuchElementException   
+from selenium.common.exceptions import NoSuchElementException
+import time
 
 def isi_siak(username, password):
     options = webdriver.ChromeOptions()
@@ -16,6 +17,7 @@ def isi_siak(username, password):
 
     login(driver, username, password)
 
+
     matkul=[]
     with open('matkul.txt') as file_inp:
         for line in file_inp:
@@ -24,6 +26,19 @@ def isi_siak(username, password):
     while True:
         try:
             driver.get("https://academic.ui.ac.id/main/CoursePlan/CoursePlanEdit")
+            time.sleep(0.5)
+
+            # Keep this up to date
+            if ("Pesan untuk pembimbing akademis" in driver.page_source):
+                break
+            raise NoSuchElementException
+
+        except NoSuchElementException:
+            logout(driver)
+            login(driver, username, password)
+
+    while True:
+        try:
             for kelas in matkul:
                 try:
                     element=driver.find_element_by_xpath("//a[text()='{}']".format(kelas))
@@ -31,13 +46,19 @@ def isi_siak(username, password):
                     ans=label.get_attribute('for')
                     clicked=driver.find_element_by_xpath('//input[@id="{}"]'.format(ans))
                     clicked.click()
+
                 except NoSuchElementException:
                     continue
+
             driver.find_element_by_name('submit').click()
-            break
+
+            if ("IRS berhasil tersimpan!" in driver.page_source):
+                break
+
+            raise NoSuchElementException
+
         except NoSuchElementException:
-            logout(driver)
-            login(driver, username, password)
+            driver.get("https://academic.ui.ac.id/main/CoursePlan/CoursePlanEdit")
 
     print("Otsu")
     input()
@@ -52,17 +73,44 @@ def login(driver, username, password):
             element = driver.find_element_by_name("p")
             element.send_keys(password)
             element.send_keys(Keys.RETURN)
-            break
-        except:
-            pass
 
+        except:
+            if ("Logout Counter" in driver.page_source):
+                break
+
+            continue
+
+        try:
+            driver.get("https://academic.ui.ac.id/main/Welcome/Index")
+            if ("Logout Counter" in driver.page_source):
+                break
+
+            raise Exception
+
+        except:
+            continue
+        
 def logout(driver):
     while True:
         try:
-            driver.find_element_by_partial_link_text('Logout').click()
-            break
-        except:
             driver.get("https://academic.ui.ac.id/main/Welcome/Index")
+            driver.find_element_by_partial_link_text('Logout').click()
+
+        except:
+            try:
+                driver.find_element_by_id("u")
+                break
+
+            except:
+                continue
+        try:
+            driver.get("https://academic.ui.ac.id/main/Authentication/")
+            driver.find_element_by_id("u")
+            break
+
+        except:
+            continue
+            
 
 if __name__ == "__main__":
     uspass=[]
