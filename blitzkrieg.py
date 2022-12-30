@@ -2,10 +2,15 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
 import time
 
-def war(username, password):
+auth_page = "https://academic.ui.ac.id/main/Authentication/"
+home_page = "https://academic.ui.ac.id/main/Welcome/Index"
+siak_page = "file:///C:/Users/Eagles/Desktop/Side%20Projects/SIAK-AXZ/examples/page-example.html"
+
+def war():
     options = webdriver.ChromeOptions()
     options.add_argument('--ignore-certificate-errors')
     options.add_argument('--ignore-ssl-errors')
@@ -15,103 +20,152 @@ def war(username, password):
     # maybe useful when your faculty goes to war on the same time as other faculty
     # driver.set_page_load_timeout(5)
 
-    login(driver, username, password)
+    username = ""
+    password = ""
+    display_name = ""
+    common_matkul = ""
+    chosen_matkul = ""
 
-    matkul=[]
-    with open('matkul.txt') as file_inp:
-        for line in file_inp:
-            matkul.append(line.strip())
+    with open("credentials.txt", "r") as file:
+        creds = []
+        for line in file:
+            creds.append(line.strip())
+
+        username = creds[0]
+        password = creds[1]
+        display_name = creds[2]
+        common_matkul = creds[3]
+        chosen_matkul = creds[4]
+    
+    print("Credentials loaded!")
+    print(f"Username: {username}")
+    print(f"Password: {password}")
+    print(f"Display name: {display_name}")
+    print(f"Common matkul: {common_matkul}")
+    print(f"Chosen matkul: {chosen_matkul}")
+
+    matkul={}
+    with open("matkul.txt", "r") as file:
+        for line in file:
+            (code, name) = line.split()
+            matkul[name] = code
+
+    print("Matkul loaded!")
+    print("Chosen matkul:")
+    for name, code in matkul.items():
+        print(f"{name} {code}")
+
+    login(driver, username, password, display_name)
     
     while True:
         try:
-            driver.get("https://academic.ui.ac.id/main/CoursePlan/CoursePlanEdit")
+            driver.get(siak_page)
             time.sleep(0.5)
 
+            if ("Anda tidak dapat mengisi IRS" in driver.page_source):
+                raise NoSuchElementException
+
             # Keep this up to date
-            if ("Pesan untuk pembimbing akademis" in driver.page_source):
+            if (
+                "Pesan untuk pembimbing akademis" in driver.page_source
+                or common_matkul in driver.page_source
+                or chosen_matkul in driver.page_source
+            ):
                 break
+
             raise NoSuchElementException
 
         except NoSuchElementException:
             logout(driver)
-            login(driver, username, password)
+            login(driver, username, password, display_name)
 
     while True:
         try:
-            for kelas in matkul:
+            for name, code in matkul.items():
                 try:
-                    clicked=driver.find_element_by_xpath('//input[@value="{}"]'.format(kelas))
-                    clicked.click()
+                    radio_button = driver.find_element(By.XPATH, '//input[@value="{}"]'.format(code))
+                    
+                    if(not radio_button.is_selected()):
+                        radio_button.click()
+                        print(f"{name} chosen! (code: {code})")
+                    else:
+                        print(f"{name} already chosen! (code: {code})")
 
                 except NoSuchElementException:
+                    print(f"Cannot find {name}! (code: {code})")
                     continue
 
-            driver.find_element_by_name('submit').click()
+            driver.find_element(By.NAME, 'submit').click()
 
-            if ("IRS berhasil tersimpan!" in driver.page_source and "Daftar IRS" in driver.page_source):
+            if ("IRS berhasil tersimpan!" in driver.page_source or "Daftar IRS" in driver.page_source):
+                for name, code in matkul.items():
+                    if (name not in driver.page_source):
+                        print(f"Did not find {name}! (code: {code})")
+                        print("Retrying...")
+                        raise NoSuchElementException
                 break
 
             raise NoSuchElementException
 
         except NoSuchElementException:
-            driver.get("https://academic.ui.ac.id/main/CoursePlan/CoursePlanEdit")
+            driver.get(siak_page)
 
-    print("Heil")
+    print("Process finished! Press enter to exit...")
     input()
     driver.close()
 
-def login(driver, username, password):
+def login(driver, username, password, display_name):
+    print("Logging in...")
+
     while True:
         try:
-            driver.get("https://academic.ui.ac.id/main/Authentication/")
-            element = driver.find_element_by_id("u")
+            driver.get(auth_page)
+            element = driver.find_element(By.ID, "u")
             element.send_keys(username)
-            element = driver.find_element_by_name("p")
+            element = driver.find_element(By.NAME, "p")
             element.send_keys(password)
             element.send_keys(Keys.RETURN)
 
-        except:
-            if ("Logout Counter" in driver.page_source):
+        except Exception as e:
+            if ("Logout Counter" in driver.page_source or display_name in driver.page_source):
+                print("Logged in!")
                 break
 
             continue
 
         try:
-            driver.get("https://academic.ui.ac.id/main/Welcome/Index")
-            if ("Logout Counter" in driver.page_source):
+            driver.get(home_page)
+            if ("Logout Counter" in driver.page_source or display_name in driver.page_source):
+                print("Logged in!")
                 break
-
             raise Exception
-
         except:
             continue
         
 def logout(driver):
+    print("Logging out...")
+
     while True:
         try:
-            driver.get("https://academic.ui.ac.id/main/Welcome/Index")
-            driver.find_element_by_partial_link_text('Logout').click()
-
+            driver.get(home_page)
+            driver.find_element(By.PARTIAL_LINK_TEXT, 'Logout').click()
         except:
             try:
-                driver.find_element_by_id("u")
+                driver.find_element(By.ID, "u")
+                print("Logged out!")
                 break
-
             except:
                 continue
-        try:
-            driver.get("https://academic.ui.ac.id/main/Authentication/")
-            driver.find_element_by_id("u")
-            break
 
+        try:
+            driver.get(auth_page)
+            driver.find_element(By.ID, "u")
+            print("Logged out!")
+            break
         except:
             continue
-            
 
 if __name__ == "__main__":
-    uspass=[]
-    with open('credentials.txt') as file_inp:
-        for line in file_inp:
-            uspass.append(line.strip())
-
-    war(uspass[0],uspass[1])
+    print("SIAK AXZ - Blitzkrieg")
+    print("Starting...")
+    war()

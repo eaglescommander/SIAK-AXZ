@@ -1,4 +1,5 @@
 from selenium import webdriver
+from selenium.webdriver.common.by import By
 import time
 
 """
@@ -22,16 +23,13 @@ homepage_url = "https://academic.ui.ac.id/main/Welcome/"
 logout_url = "https://academic.ui.ac.id/main/Authentication/Logout"
 siak_url = "https://academic.ui.ac.id/main/CoursePlan/CoursePlanEdit"
 
-# uncomment for testing
-#siak_url = "./Penambahan%20IRS%20-%20Dennis%20Al%20Baihaqi%20Walangadi%20(1906400141)%3B%20Kurikulum%2009.00.12.01-2016%20CoursePlanEdit%20-%20SIAK%20NG.html"
-
 down_string = "Universitas Indonesia"
 matkul_code = {}
 
 with open("matkul.txt", "r") as file:
-    for id, matkul in enumerate(file):
-        matkul = matkul.strip()
-        matkul_code[matkul] = id
+    for line in file:
+        (kelas, nama) = line.split()
+        matkul_code[nama] = kelas
 
 # fill your login credentials here
 user = ""
@@ -58,25 +56,25 @@ def logout_page():
 def login_page():
     #driver.get(login_url)
 
-    username = driver.find_element_by_name("u")
+    username = driver.find_element(By.NAME, "u")
     username.clear()
     username.send_keys(user)
     time.sleep(0.1)
 
-    password = driver.find_element_by_name("p")
+    password = driver.find_element(By.NAME, "p")
     password.clear()
     password.send_keys(passw)
     time.sleep(0.1)
-    driver.find_element_by_xpath("//input[@value='Login']").click()
+    driver.find_element(By.XPATH, "//input[@value='Login']").click()
 
 def war_page():
     #driver.get(siak_url)
     #time.sleep(2)
-    for kode, name in matkul_code.items():
+    for name, kode in matkul_code.items():
 
         # antisipasi salah masukkin kode
         try:
-            radio_input = driver.find_element_by_xpath(f"//input[@value='{kode}']")
+            radio_input = driver.find_element(By.XPATH, f"//input[@value='{kode}']")
             if(not radio_input.is_selected()): 
                 radio_input.click()
                 print(f"{name} dipilih! (kode: {kode})")
@@ -87,7 +85,7 @@ def war_page():
             print(f"{name} tidak ada! (kode: {kode})")
             #time.sleep(5)
 
-    button = driver.find_element_by_xpath("//input[@value='Simpan IRS']")
+    button = driver.find_element(By.XPATH, "//input[@value='Simpan IRS']")
     button.click()
 
 if __name__ == "__main__":
