@@ -1,6 +1,6 @@
-678482-3
-677663-4
-678110-3
+678482-3 DDP
+677663-4 SDA
+678110-3 BASDAT
 
 Matkul code is calculated by the matkul id and the "sks" of the matkul.
 For example, for https://academic.ui.ac.id/main/CoursePlan/ClassInfo?cc=678110, the matkul code is 678110-3, because "Grafika Komputer" is 3 sks

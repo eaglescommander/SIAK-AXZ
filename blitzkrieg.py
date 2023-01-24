@@ -8,7 +8,7 @@ import time
 
 auth_page = "https://academic.ui.ac.id/main/Authentication/"
 home_page = "https://academic.ui.ac.id/main/Welcome/Index"
-siak_page = "file:///C:/Users/Eagles/Desktop/Side%20Projects/SIAK-AXZ/examples/page-example.html"
+siak_page = "https://academic.ui.ac.id/main/CoursePlan/CoursePlanEdit"
 
 def war():
     options = webdriver.ChromeOptions()
